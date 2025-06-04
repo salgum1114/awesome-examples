@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ELK.js + Fabric.js Flow Layout</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/elkjs/lib/elk.bundled.js"></script>
+        <style>
+            canvas {
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c" width="4000" height="4000"></canvas>
+        <script>
+            const data = {
+                nodes: [
+                    {
+                        id: "Cvfu6Xf3k9WxgEIK",
+                        data: {
+                            label: "Server trigger",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "hHSceJF0BR8NRHqv",
+                        data: {
+                            label: "set device ID",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "xzk2VAe55rBTFTBM",
+                        data: {
+                            label: "switch",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "httGb5ufBj7BpH4X",
+                        data: {
+                            label: "unknwon funcNo",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "DvuopzPZUQ39Gsqn",
+                        data: {
+                            label: "get device",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "EbrduicVHZOQiYlx",
+                        data: {
+                            label: "device exist?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "sAFZNMVCq3ndgwZ8",
+                        data: {
+                            label: "device doesn't exist",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "xcOwrbrQkgLvaZRl",
+                        data: {
+                            label: "set device ID",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "FPxS7lcUt8CflFNY",
+                        data: {
+                            label: "get device",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "SwLaF8N6yR6AdjAu",
+                        data: {
+                            label: "device exist?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "hqWeqIZQEeB0dCWg",
+                        data: {
+                            label: "device doesn't exist",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "nSOrlqLhtSlFjKH8",
+                        data: {
+                            label: "switch",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "Poncb70k7OwQ2P4N",
+                        data: {
+                            label: "LWT unknwon status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "VWjgAHQ4RXTXG2vb",
+                        data: {
+                            label: "down availability",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "yQXW0yOzXgeDlytX",
+                        data: {
+                            label: "LWT offline",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "iFlE3H1Hal6c0BOk",
+                        data: {
+                            label: "up availability",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "WnhJQanCDYLA22Nq",
+                        data: {
+                            label: "LWT online",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "YPnCOohH0TSQbVy5",
+                        data: {
+                            label: "switch",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "JktRHFpYxQfagwtb",
+                        data: {
+                            label: "get latest config",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "LgnNNmGJNj7LrnEL",
+                        data: {
+                            label: "config exist?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "XnNA1dLSMqP3JcXI",
+                        data: {
+                            label: "JSON",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "OzfRUwqw7KrUpuQm",
+                        data: {
+                            label: "set init data",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "RfOWSsEKBlL7NwyQ",
+                        data: {
+                            label: "get latest fw version",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "daVYDjYRE7eHOW6A",
+                        data: {
+                            label: "fw version exist?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "qAXXEzn6MR9XPN6n",
+                        data: {
+                            label: "saved version doesn't exist",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "NcfVbbIvUnaHUrdo",
+                        data: {
+                            label: "version equals ?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "cBchgwGGTtCTv1dw",
+                        data: {
+                            label: "update firmware",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "SqelBVvPS2mw6Psw",
+                        data: {
+                            label: "MQTT: \uac8c\uc2dc",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "AXADvq0pPkJRNEjD",
+                        data: {
+                            label: "LWT trigger",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "xYwd33on9auG4mjy",
+                        data: {
+                            label: "JSON",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "bnicew9HzvMY67vI",
+                        data: {
+                            label: "nothing",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "ORlniBwSb0S51B6K",
+                        data: {
+                            label: "save fota status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "vfqFFUhMo11xVgX4",
+                        data: {
+                            label: "save fota status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "cTDdTsnoCWFDFqbM",
+                        data: {
+                            label: "save capsule report",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "bwtC6cMXtIek7gQ7",
+                        data: {
+                            label: "save capsule report",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "uAP2D2xoJudIFiRJ",
+                        data: {
+                            label: "to timestamp millis",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "HVoWwzGtSuGSHaPK",
+                        data: {
+                            label: "to timestamp millis",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "MLt3OIks9VBDJfow",
+                        data: {
+                            label: "to timestamp millis",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "IXmApbaUYhkv0nva",
+                        data: {
+                            label: "save boot status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "xumqFjJQuPkoYZVI",
+                        data: {
+                            label: "save disconnect status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "obFWiWMbOLnpgCVP",
+                        data: {
+                            label: "save boot status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "nrSD3EjDzZigrjMp",
+                        data: {
+                            label: "save disconnect status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "cQq4biO5nmcliBz5",
+                        data: {
+                            label: "update config by rn",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "NkFgkjBqb68FoIFi",
+                        data: {
+                            label: "update config by wn",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "gwAVVmOrquxXtWs7",
+                        data: {
+                            label: "\uc2a4\uc704\uce58",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "VNQoVree2pFfYv3g",
+                        data: {
+                            label: "nothing",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "SRCgZotKaE6JUBLH",
+                        data: {
+                            label: "update config",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "okcN90e88sNYcwT8",
+                        data: {
+                            label: "update config",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "EWfb7CB15hgtEgTj",
+                        data: {
+                            label: "MQTT: \uac8c\uc2dc",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "arp8lJLNSJo3t8Mi",
+                        data: {
+                            label: "request wirte config",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "tHdxKJIbkhjMnRVV",
+                        data: {
+                            label: "write request",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "OpfS1ZXQs7m6NzSN",
+                        data: {
+                            label: "MQTT: \uac8c\uc2dc",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "mWXJVG1Ra0rf2iSQ",
+                        data: {
+                            label: "\ub514\ubc84\uadf8",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "gZhv0y6zIK5T5Q1B",
+                        data: {
+                            label: "Read request",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "NNQW7Yv5rvH3yFSU",
+                        data: {
+                            label: "MQTT: \uac8c\uc2dc",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "wWRamP27aSXr5oy5",
+                        data: {
+                            label: "\ub514\ubc84\uadf8",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "FfqYzyItaU7f0z1s",
+                        data: {
+                            label: "unknwon  type",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "VCdFWnJoQLQZ9qkP",
+                        data: {
+                            label: "status exist?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "lxKeenpJHOonM8Vh",
+                        data: {
+                            label: "has no disconnected",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "LjQmHVeWzxJwONVT",
+                        data: {
+                            label: "changed by client?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "GDuqUjhGJ1kiiru2",
+                        data: {
+                            label: "update config",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "tTegmYDEvF9JBUNV",
+                        data: {
+                            label: "Firebase RTDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "UNBN6rmYIQOdrSUC",
+                        data: {
+                            label: "set timestamp",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "CCMGLhRiWau0hI10",
+                        data: {
+                            label: "Firebase RTDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "mQXYbm8ykuBsH8PO",
+                        data: {
+                            label: "get capsule report",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "TSl73CiThTz8Xm1t",
+                        data: {
+                            label: "capsule report ?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "HXim9AaelYqLJfrR",
+                        data: {
+                            label: "Firebase RTDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "TMNA86FzqkW2rmwW",
+                        data: {
+                            label: "set RTDB data",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "mIRePUXmQkPm1f20",
+                        data: {
+                            label: "set RTDB data",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "FdkuRKT7IPH3wjx8",
+                        data: {
+                            label: "get capsule report",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "UyfgLdvSw9KBpBKs",
+                        data: {
+                            label: "capsule report ?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "ESTH6nOp4Q5U4OVV",
+                        data: {
+                            label: "Firebase RTDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "UjulihaRs6B5pwFT",
+                        data: {
+                            label: "set log data",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "CycQr5xKZTNc9yDM",
+                        data: {
+                            label: "MongoDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "czukUxXqrmk9qWYb",
+                        data: {
+                            label: "get fw version",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "dZM3PZcdCMD10v1y",
+                        data: {
+                            label: "set log data",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "LgcR0rO8ZXL0wrgO",
+                        data: {
+                            label: "MongoDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "XUH4C0ORqlCJbGXx",
+                        data: {
+                            label: "get fw version",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "LTPK8daS8zT3itpZ",
+                        data: {
+                            label: "set config timestamp",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "HihRVOlsl9jxLYuk",
+                        data: {
+                            label: "\uc2a4\uc704\uce58",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "poWc8aIkDUP0Kd4G",
+                        data: {
+                            label: "fota success",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "hEUJnYbIiL9w0Cew",
+                        data: {
+                            label: "fota fail",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "VUkTT9GiR9YOgc0L",
+                        data: {
+                            label: "unknwon status",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "RhmCzoWhlU8zhcce",
+                        data: {
+                            label: "MongoDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "Uwq4jhDtFIu0SCx1",
+                        data: {
+                            label: "MongoDB",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "AVCdcPp8X8bMPtuD",
+                        data: {
+                            label: "set reg date",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "rUFGwyiD79AXpNWu",
+                        data: {
+                            label: "\uc2a4\uc704\uce58",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "OSatfiLpVWKHhmaM",
+                        data: {
+                            label: "get reservation",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "OhdG9MncfJSEkgZY",
+                        data: {
+                            label: "reservation?",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "QzsBXKh7w1Hy2XB6",
+                        data: {
+                            label: "JSON",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "futDWNaepdjg1WfV",
+                        data: {
+                            label: "\ub8e8\ud504",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "pqSWzW636nCpcNni",
+                        data: {
+                            label: "set reservation",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "rxtfYRmfv7QdZCdS",
+                        data: {
+                            label: "save event record",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "kCIUtBNb1rUpZWlr",
+                        data: {
+                            label: "save event record",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "qFjZFNondto2qBNA",
+                        data: {
+                            label: "save event record",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                    {
+                        id: "llpuoXXewxBFXXl8",
+                        data: {
+                            label: "save event record",
+                        },
+                        position: {
+                            x: 0,
+                            y: 0,
+                        },
+                        className: "node",
+                    },
+                ],
+                edges: [],
+            };
+
+            const elk = new ELK();
+            const graph = {
+                id: "root",
+                layoutOptions: {
+                    "elk.algorithm": "layered",
+                    "elk.direction": "DOWN",
+                    "elk.edgeRouting": "ORTHOGONAL",
+                    "elk.portConstraints": "FREE",
+                    "elk.layered.nodePlacement.strategy": "LINEAR_SEGMENTS",
+                    "elk.layered.considerModelOrder.strategy":
+                        "NODES_AND_EDGES",
+                    "elk.layered.crossingMinimization.strategy": "LAYER_SWEEP",
+                    "elk.spacing.edgeNode": "15",
+                    "elk.spacing.nodeNode": "30",
+                    "elk.layered.spacing.nodeNodeBetweenLayers": "80",
+                },
+                children: data.nodes.map((n) => {
+                    return {
+                        id: n.id,
+                        width: 120,
+                        height: 50,
+                        labels: [{ text: n.data.label }],
+                    };
+                }),
+                edges: data.edges.map((e) => {
+                    return {
+                        id: e.id,
+                        sources: [e.source],
+                        targets: [e.target],
+                    };
+                }),
+            };
+
+            const canvas = new fabric.Canvas("c");
+            elk.layout(graph).then((g) => {
+                g.children.forEach((n) => {
+                    const rect = new fabric.Rect({
+                        left: n.x,
+                        top: n.y,
+                        width: n.width,
+                        height: n.height,
+                        fill: "#4CAF50",
+                        rx: 6,
+                        ry: 6,
+                        selectable: false,
+                    });
+                    const text = new fabric.Text(n.labels[0].text, {
+                        left: n.x + n.width / 2,
+                        top: n.y + n.height / 2,
+                        fontSize: 14,
+                        fill: "white",
+                        originX: "center",
+                        originY: "center",
+                        selectable: false,
+                    });
+                    canvas.add(rect);
+                    canvas.add(text);
+                });
+
+                g.edges.forEach((e) => {
+                    (e.sections || []).forEach((sec) => {
+                        const points = [
+                            [sec.startPoint.x, sec.startPoint.y],
+                            ...(sec.bendPoints || []).map((p) => [p.x, p.y]),
+                            [sec.endPoint.x, sec.endPoint.y],
+                        ];
+                        for (let i = 0; i < points.length - 1; i++) {
+                            const [x1, y1] = points[i];
+                            const [x2, y2] = points[i + 1];
+                            const line = new fabric.Line([x1, y1, x2, y2], {
+                                stroke: "black",
+                                selectable: false,
+                            });
+                            canvas.add(line);
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

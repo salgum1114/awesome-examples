@@ -1,0 +1,73 @@
+<canvas id="c" width="800" height="600"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script>
+    const canvas = new fabric.Canvas("c");
+
+    // 1. dagre 그래프 생성
+    const g = new dagre.graphlib.Graph();
+
+    g.setGraph({});
+    g.setDefaultEdgeLabel(() => ({}));
+
+    // 2. 노드 추가 (id, { width, height })
+    g.setNode("A", { label: "Node A", width: 100, height: 50 });
+    g.setNode("B", { label: "Node B", width: 100, height: 50 });
+    g.setNode("C", { label: "Node C", width: 100, height: 50 });
+    g.setNode("D", { label: "Node D", width: 100, height: 50 });
+    g.setNode("E", { label: "Node E", width: 160, height: 50 });
+    g.setNode("F", { label: "Node F", width: 100, height: 50 });
+
+    // 3. 엣지 추가 (source, target)
+    g.setEdge("A", "B");
+    g.setEdge("A", "C");
+    g.setEdge("A", "D");
+    g.setEdge("D", "E");
+    g.setEdge("E", "F");
+
+    // 4. 레이아웃 계산
+    dagre.layout(g);
+
+    // 5. FabricJS로 그리기
+    g.nodes().forEach((v) => {
+        const node = g.node(v);
+        const rect = new fabric.Rect({
+            left: node.x - node.width / 2,
+            top: node.y - node.height / 2,
+            width: node.width,
+            height: node.height,
+            fill: "#eef",
+            stroke: "#333",
+            strokeWidth: 1,
+            originX: "left",
+            originY: "top",
+        });
+        const text = new fabric.Text(node.label, {
+            left: node.x,
+            top: node.y,
+            fontSize: 14,
+            originX: "center",
+            originY: "center",
+        });
+        canvas.add(rect);
+        canvas.add(text);
+    });
+
+    g.edges().forEach((e) => {
+        const points = [
+            { x: g.node(e.v).x, y: g.node(e.v).y },
+            { x: g.node(e.w).x, y: g.node(e.w).y },
+        ];
+        const line = new fabric.Line(
+            [points[0].x, points[0].y, points[1].x, points[1].y],
+            {
+                stroke: "#000",
+                selectable: false,
+                evented: false,
+            }
+        );
+        canvas.add(line);
+    });
+
+    canvas.renderAll();
+</script>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>FabricJS Obstacle Avoiding Edge</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/elkjs@0.7.1/lib/elk.bundled.js"></script>
+        <style>
+            canvas {
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c" width="1200" height="800"></canvas>
+        <script>
+            const canvas = new fabric.Canvas("c");
+            const elk = new ELK();
+
+            const nodes = [
+                { id: "1", label: "Code1", width: 100, height: 60 },
+                { id: "2", label: "Agent", width: 120, height: 60 },
+            ];
+
+            const edges = [
+                {
+                    id: "e1",
+                    sources: ["1"],
+                    targets: ["2"],
+                    fromDir: "R",
+                    toDir: "L",
+                },
+            ];
+
+            const graph = {
+                id: "root",
+                layoutOptions: {
+                    "elk.algorithm": "layered",
+                    "elk.direction": "RIGHT",
+                    "elk.spacing.nodeNodeBetweenLayers": "100",
+                    "elk.layered.spacing.nodeNodeBetweenLayers": "100",
+                },
+                children: nodes,
+                edges: edges,
+            };
+
+            const nodeMap = {};
+            const connections = [];
+
+            function getPortPosition(group, position) {
+                const { left, top, width, height } = group;
+                switch (position) {
+                    case "R":
+                        return { x: left + width, y: top + height / 2 };
+                    case "L":
+                        return { x: left, y: top + height / 2 };
+                    case "T":
+                        return { x: left + width / 2, y: top };
+                    case "B":
+                        return { x: left + width / 2, y: top + height };
+                }
+            }
+
+            function isPointInNode(x, y, nodes) {
+                return nodes.some((g) => {
+                    const bbox = g.getBoundingRect();
+                    return (
+                        x >= bbox.left &&
+                        x <= bbox.left + bbox.width &&
+                        y >= bbox.top &&
+                        y <= bbox.top + bbox.height
+                    );
+                });
+            }
+
+            function drawEdge(from, to, fromDir = "R", toDir = "L") {
+                const p1 = getPortPosition(from, fromDir);
+                const p2 = getPortPosition(to, toDir);
+
+                const dx = Math.abs(p2.x - p1.x);
+                const dy = Math.abs(p2.y - p1.y);
+
+                // Control point offset
+                const offsetX = dx / 2;
+                const offsetY = dy / 2;
+
+                // Bezier control points
+                const cp1x =
+                    p1.x +
+                    (fromDir === "R"
+                        ? offsetX
+                        : fromDir === "L"
+                        ? -offsetX
+                        : 0);
+                const cp1y =
+                    p1.y +
+                    (fromDir === "B"
+                        ? offsetY
+                        : fromDir === "T"
+                        ? -offsetY
+                        : 0);
+                const cp2x =
+                    p2.x +
+                    (toDir === "L" ? -offsetX : toDir === "R" ? offsetX : 0);
+                const cp2y =
+                    p2.y +
+                    (toDir === "T" ? -offsetY : toDir === "B" ? offsetY : 0);
+
+                const curvedPath = `M ${p1.x} ${p1.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+
+                const line = new fabric.Path(curvedPath, {
+                    stroke: "blue",
+                    fill: "",
+                    selectable: false,
+                    evented: false,
+                    strokeWidth: 3,
+                    strokeLineJoin: "round",
+                });
+
+                canvas.add(line);
+                line.sendToBack();
+                return line;
+            }
+
+            function updateConnectionsFor(node) {
+                node.connections.forEach((conn) => {
+                    if (conn.line) canvas.remove(conn.line);
+                    conn.line = drawEdge(
+                        conn.from,
+                        conn.to,
+                        conn.fromDir,
+                        conn.toDir
+                    );
+                });
+                canvas.requestRenderAll();
+            }
+
+            elk.layout(graph).then((layout) => {
+                layout.children.forEach((n) => {
+                    const rect = new fabric.Rect({
+                        left: n.x,
+                        top: n.y,
+                        width: n.width,
+                        height: n.height,
+                        fill: "#e3f2fd",
+                        stroke: "#42a5f5",
+                        strokeWidth: 2,
+                        originX: "left",
+                        originY: "top",
+                        hasControls: false,
+                    });
+
+                    const label = new fabric.Text(n.label, {
+                        left: n.x + 10,
+                        top: n.y + 10,
+                        fontSize: 14,
+                        fill: "#000",
+                        originX: "left",
+                        originY: "top",
+                    });
+
+                    const group = new fabric.Group([rect, label], {
+                        left: n.x,
+                        top: n.y,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        hasControls: false,
+                        hasBorders: false,
+                    });
+
+                    group.id = n.id;
+                    group.connections = [];
+                    canvas.add(group);
+                    nodeMap[n.id] = group;
+                });
+
+                layout.edges.forEach((e) => {
+                    const from = nodeMap[e.sources[0]];
+                    const to = nodeMap[e.targets[0]];
+                    const fromDir = e.fromDir || "R";
+                    const toDir = e.toDir || "L";
+                    const line = drawEdge(from, to, fromDir, toDir);
+
+                    const conn = { from, to, fromDir, toDir, line };
+                    from.connections.push(conn);
+                    to.connections.push(conn);
+                    connections.push(conn);
+                });
+            });
+
+            canvas.on("object:moving", function (e) {
+                const obj = e.target;
+                if (obj.connections) {
+                    updateConnectionsFor(obj);
+                }
+            });
+        </script>
+    </body>
+</html>

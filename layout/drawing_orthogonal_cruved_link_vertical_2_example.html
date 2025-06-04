@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>FabricJS Obstacle Avoiding Edge</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/elkjs@0.7.1/lib/elk.bundled.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/svg-path-properties@latest/dist/svg-path-properties.min.js"></script>
+        <style>
+            canvas {
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="c" width="1200" height="800"></canvas>
+        <script>
+            const canvas = new fabric.Canvas("c");
+            const elk = new ELK();
+
+            const nodes = [
+                {
+                    id: "1",
+                    labels: [{ text: "Agent" }],
+                    width: 120,
+                    height: 60,
+                },
+                {
+                    id: "2",
+                    labels: [{ text: "Code1" }],
+                    width: 120,
+                    height: 60,
+                },
+                {
+                    id: "3",
+                    labels: [{ text: "Code2" }],
+                    width: 120,
+                    height: 60,
+                },
+                {
+                    id: "4",
+                    labels: [{ text: "Filter1" }],
+                    width: 120,
+                    height: 60,
+                },
+                {
+                    id: "5",
+                    labels: [{ text: "Function1" }],
+                    width: 120,
+                    height: 60,
+                },
+                {
+                    id: "6",
+                    labels: [{ text: "Function2" }],
+                    width: 120,
+                    height: 60,
+                },
+            ];
+
+            const edges = [
+                {
+                    id: "e1",
+                    sources: ["1"],
+                    targets: ["2"],
+                    fromDir: "B",
+                    toDir: "T",
+                },
+                {
+                    id: "e2",
+                    sources: ["1"],
+                    targets: ["3"],
+                    fromDir: "B",
+                    toDir: "T",
+                },
+                {
+                    id: "e3",
+                    sources: ["3"],
+                    targets: ["4"],
+                    fromDir: "B",
+                    toDir: "T",
+                },
+                {
+                    id: "e4",
+                    sources: ["4"],
+                    targets: ["5"],
+                    fromDir: "B",
+                    toDir: "T",
+                },
+                {
+                    id: "e5",
+                    sources: ["4"],
+                    targets: ["6"],
+                    fromDir: "B",
+                    toDir: "T",
+                },
+            ];
+
+            const graph = {
+                id: "root",
+                layoutOptions: {
+                    "elk.algorithm": "layered",
+                    "elk.direction": "DOWN",
+                    "elk.alignment": "CENTER",
+                    "elk.spacing.nodeNodeBetweenLayers": "100",
+                    "elk.layered.spacing.nodeNodeBetweenLayers": "100",
+                },
+                children: nodes,
+                edges: edges,
+            };
+
+            const nodeMap = {};
+            const connections = [];
+
+            function getPortPosition(group, position) {
+                const { left, top, width, height } = group;
+                switch (position) {
+                    case "R":
+                        return { x: left + width, y: top + height / 2 };
+                    case "L":
+                        return { x: left, y: top + height / 2 };
+                    case "T":
+                        return { x: left + width / 2, y: top };
+                    case "B":
+                        return { x: left + width / 2, y: top + height };
+                }
+            }
+
+            function drawEdge(from, to, fromDir = "R", toDir = "L") {
+                const { path, midX, midY, angle } = calculateEdgePath(
+                    from,
+                    to,
+                    fromDir,
+                    toDir
+                );
+
+                const line = new fabric.Path(path, {
+                    stroke: "blue",
+                    fill: "",
+                    selectable: false,
+                    evented: false,
+                    strokeWidth: 3,
+                    strokeLineJoin: "round",
+                    objectCaching: false,
+                });
+
+                const arrow = new fabric.Triangle({
+                    left: midX,
+                    top: midY,
+                    originX: "center",
+                    originY: "center",
+                    angle: angle,
+                    width: 15,
+                    height: 15,
+                    fill: "blue",
+                    selectable: false,
+                    evented: false,
+                });
+
+                canvas.add(line);
+                canvas.add(arrow);
+                line.sendToBack();
+                arrow.sendToBack();
+
+                return { line, arrow };
+            }
+
+            function updateEdge(conn) {
+                const { path, midX, midY, angle } = calculateEdgePath(
+                    conn.from,
+                    conn.to,
+                    conn.fromDir,
+                    conn.toDir
+                );
+                conn.line.set({ path: fabric.util.parsePath(path) });
+                conn.line.setCoords();
+                conn.arrow.set({
+                    left: midX,
+                    top: midY,
+                    angle: angle,
+                });
+                conn.arrow.setCoords();
+            }
+
+            function calculateEdgePath(from, to, fromDir, toDir) {
+                const p1 = getPortPosition(from, fromDir);
+                const p2 = getPortPosition(to, toDir);
+
+                const width = 120;
+                const height = 60;
+                const offset = 80;
+                let x1 = p1.x;
+                let y1 = p1.y;
+                let x2 = x1;
+                let y2 = y1 + height / 2;
+                let x3 = x2 - width;
+                let y3 = p2.y - height / 2;
+                let x4 = p2.x;
+                let y4 = p2.y;
+                const useCurve = p2.y > p1.y;
+
+                let path;
+                if (useCurve) {
+                    path = `M ${p1.x} ${p1.y} C ${p1.x} ${p1.y + 40}, ${p2.x} ${
+                        p2.y - 40
+                    }, ${p2.x} ${p2.y}`;
+                } else {
+                    const width = 120;
+                    const height = 60;
+                    const offset = 80;
+                    const baseRadius = 10;
+                    const dx = p1.x - p2.x;
+                    const isUpward = width <= dx && dx >= 0;
+                    const distance = Math.abs(width - dx);
+                    let ratio = Math.min(1, distance / offset);
+                    let radius = baseRadius * ratio;
+
+                    path = [
+                        `M ${x1} ${y1}`,
+                        `L ${x2} ${y2 - baseRadius}`,
+                        `Q ${x2} ${y2} ${x2 - baseRadius} ${y2}`,
+                        `L ${x3 + baseRadius} ${y2}`,
+                        `Q ${x3} ${y2} ${x3} ${y2 - baseRadius}`,
+                        `L ${x3} ${y3 + radius}`,
+                        `Q ${x3} ${y3} ${
+                            isUpward ? x3 - radius : x3 + radius
+                        } ${y3}`,
+                        `L ${isUpward ? x4 + radius : x4 - radius} ${y3}`,
+                        `Q ${x4} ${y3} ${x4} ${y3 + radius}`,
+                        `L ${x4} ${y4}`,
+                    ].join(" ");
+                }
+
+                let midX = x3;
+                let midY = (y3 + y2) / 2;
+                let angle = 0;
+                if (useCurve) {
+                    // svg-path-properties 객체 생성
+                    const properties = new svgPathProperties.svgPathProperties(
+                        path
+                    );
+
+                    // 전체 길이
+                    const totalLength = properties.getTotalLength();
+                    // 중간 점 좌표
+                    const midPoint = properties.getPointAtLength(
+                        totalLength / 2
+                    );
+                    // 접선 각도 계산 (중간 위치에서 앞뒤 좌표 차이로)
+                    const delta = 1; // 미세 구간
+                    const ahead = properties.getPointAtLength(
+                        totalLength / 2 + delta
+                    );
+                    const behind = properties.getPointAtLength(
+                        totalLength / 2 - delta
+                    );
+
+                    const dx = ahead.x - behind.x;
+                    const dy = ahead.y - behind.y;
+                    midX = midPoint.x;
+                    midY = midPoint.y;
+                    angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+                }
+                return { path, midX, midY, angle };
+            }
+
+            elk.layout(graph).then((layout) => {
+                layout.children.forEach((n) => {
+                    const rect = new fabric.Rect({
+                        left: n.x,
+                        top: n.y,
+                        width: n.width,
+                        height: n.height,
+                        fill: "#e3f2fd",
+                        stroke: "#42a5f5",
+                        strokeWidth: 2,
+                        originX: "left",
+                        originY: "top",
+                        hasControls: false,
+                    });
+                    const label = new fabric.Text(n.labels[0].text, {
+                        left: n.x + 10,
+                        top: n.y + 10,
+                        fontSize: 14,
+                        fill: "#000",
+                        originX: "left",
+                        originY: "top",
+                    });
+
+                    const group = new fabric.Group([rect, label], {
+                        left: n.x,
+                        top: n.y,
+                        lockScalingX: true,
+                        lockScalingY: true,
+                        hasControls: false,
+                        hasBorders: false,
+                    });
+
+                    group.id = n.id;
+                    group.connections = [];
+                    canvas.add(group);
+                    nodeMap[n.id] = group;
+                });
+
+                layout.edges.forEach((e) => {
+                    const from = nodeMap[e.sources[0]];
+                    const to = nodeMap[e.targets[0]];
+                    const fromDir = e.fromDir || "R";
+                    const toDir = e.toDir || "L";
+
+                    const { line, arrow } = drawEdge(from, to, fromDir, toDir);
+
+                    const conn = { from, to, fromDir, toDir, line, arrow };
+                    from.connections.push(conn);
+                    to.connections.push(conn);
+                    connections.push(conn);
+                });
+            });
+
+            canvas.on("object:moving", function (e) {
+                const obj = e.target;
+                if (obj.connections) {
+                    obj.connections.forEach(updateEdge);
+                    canvas.requestRenderAll();
+                }
+            });
+        </script>
+    </body>
+</html>
